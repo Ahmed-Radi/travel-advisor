@@ -9,10 +9,10 @@ export default function List({ places, childClicked, isLoading, type, setType, r
     // const [rating, setRating] = useState('');
     const [elRefs, setElRefs] = useState([])
 
-    console.log({childClicked})
+    // console.log({childClicked})
     useEffect(() => {
         const refs = Array(places?.length).fill().map((_, i) => (elRefs[i] || createRef()));
-        console.log(refs)
+        // console.log(refs)
         setElRefs(refs);
     },[places]);
     return (
