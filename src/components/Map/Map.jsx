@@ -4,8 +4,9 @@ import { Paper, Typography, useMediaQuery } from '@material-ui/core';
 import LocationOnOutLinedIcon from '@material-ui/icons/LocationOnOutlined';
 import Rating from '@material-ui/lab/Rating';
 import useStyles from './styles';
+import mapStyle from './mapStyle.js';
 
-export default function Map({ setCoordinates, setBounds, coordinates, places, setChildClicked }) {
+export default function Map({ setCoordinates, setBounds, coordinates, places, setChildClicked, weatherData }) {
     const classes = useStyles();
     const isDesktop = useMediaQuery('(min-width:600px)'); // this statement return *true* if screen width larger than 600px
     const imageUrl = 'https://ca-times.brightspotcdn.com/dims4/default/c93ef50/2147483647/strip/true/crop/5398x3648+0+0/resize/1486x1004!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F75%2F02%2Fe59417064931bbc042bf594f5010%2Fla-photos-1staff-874854-tr-winter40-culvercity21-mam.jpg'
@@ -13,12 +14,13 @@ export default function Map({ setCoordinates, setBounds, coordinates, places, se
     return (
         <div className={classes.mapContainer}>
             <GoogleMapReact
-                bootstrapURLKeys={{ key: 'AIzaSyBa97dMlyDo8_a5BriJAfHb-Inf9rAnlNM' }} //** oldAPI(email: ahmedradi743@) //AIzaSyAwfkuM5bL6GY71UBrdLlqdhfiLM2tiWAM
+                bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }} //** oldAPI(email: ahmedradi743@) //AIzaSyAwfkuM5bL6GY71UBrdLlqdhfiLM2tiWAM
                 defaultCenter={coordinates}
                 center={coordinates}
                 defaultZoom={14}
                 margin={[50, 50, 50, 50]}
-                options={''}
+                options={{ disableDefaultUI: true, zoomControl: true, styles: mapStyle }}
+                // options={{ disableDefaultUI: true, zoomControl: true }}
                 onChange={(e) => {
                     // console.log(e)
                     setCoordinates({ lat: e.center.lat, lng: e.center.lng })
@@ -49,6 +51,11 @@ export default function Map({ setCoordinates, setBounds, coordinates, places, se
                         <LocationOnOutLinedIcon color="primary" fontSize="large" />
                     ) }
                 </div>
+                ))}
+                {weatherData?.list?.map((data, index) => (
+                    <div key={index} lat={data.coord.lat} lng={data.coord.lon}>
+                        <img src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`} height="70px" alt="weather icon"/>
+                    </div>
                 ))}
             </GoogleMapReact>
         </div>
